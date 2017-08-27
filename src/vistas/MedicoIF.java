@@ -426,13 +426,14 @@ public class MedicoIF extends javax.swing.JInternalFrame {
             BotonesClick();
             cnx.Conecta();
             try{                                               
-                String SQL = "Select * from medico where idmedico = " + tblMedico.getValueAt(fila, 0);
+                String SQL = "Select * from medico_view where idmedico = " + tblMedico.getValueAt(fila, 0);
                 stm = cnx.conn.createStatement();
                 rs = stm.executeQuery(SQL);
                 
                 rs.next();
-                txtNombre.setText(rs.getString("nombre"));                
-                cbxEspecialidad.setSelectedItem(es.consultaEspecialidad(rs.getInt("iduniversidad")));
+                txtNombre.setText(rs.getString("nombre"));
+                txtApellido.setText(rs.getString("apellido"));
+                cbxEspecialidad.setSelectedItem(es.consultaEspecialidad(rs.getInt("idespecialidad")));
             } catch(SQLException | HeadlessException e){
                 JOptionPane.showMessageDialog(null, "Error Facultad Mouse Cliked: " + e.getMessage());
             } finally {

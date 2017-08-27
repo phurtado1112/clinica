@@ -402,7 +402,7 @@ public class UsuarioIF extends javax.swing.JInternalFrame {
                 txtNombre.setText(rs.getString("nombre"));
                 txtApellido.setText(rs.getString("apellido"));
                 txtUsuario.setText(rs.getString("usuario"));
-                pswContrasena.setText(rs.getString("contrasena"));
+                pswContrasena.setText(rs.getString("contrasenia"));
             } catch(SQLException e){
                 JOptionPane.showMessageDialog(null, "Error Usuario Mouse Cliked: " + e.getMessage());
             } finally {

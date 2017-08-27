@@ -8,33 +8,31 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.JInternalFrame;
 import util.Conecta;
-import util.Globales;
 import util.Valida;
 
 /**
  *
  * @author Pablo Hurtado
  */
-public class PacienteIF extends javax.swing.JInternalFrame {
+public class PacienteIF extends JInternalFrame {
     DefaultTableModel model;
     DefaultComboBoxModel modeloCombo;
-    Paciente e = new Paciente();
+    Paciente pa = new Paciente();
     Conecta cnx = new Conecta();
     Valida va = new Valida();
     Statement stm;
     ResultSet rs;
-    //int id = 1;
     
     /**
-     * Creates new form EstudianteIF
+     * Creates new form PacienteIF
      */
     public PacienteIF() {
         initComponents();       
         cnx.Conecta();
         Deshabilitar();
         LlenarTabla();
-        llenarTXT();
         BotonesInicio();
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }
@@ -46,37 +44,28 @@ public class PacienteIF extends javax.swing.JInternalFrame {
      */
     
     public void Habilitar(){
-        txtNombres.setEnabled(true);
-        va.SoloLetras(txtNombres);
-        va.SeleccionarTodo(txtNombres);
-        txtApellidos.setEnabled(true);
-        va.SoloLetras(txtApellidos);
-        va.SeleccionarTodo(txtApellidos);
-        txtCarnet.setEnabled(true);
-        va.LetrasNumeros(txtCarnet);
-        va.SeleccionarTodo(txtCarnet);
-        txtEmail.setEnabled(true);
-        va.SeleccionarTodo(txtEmail);
-        txtCelular.setEnabled(true);        
-        va.SoloNumerosCelular(txtCelular);
-        va.SeleccionarTodo(txtCelular);
-        txtNombres.requestFocus();
+        txtNombre.setEnabled(true);
+        va.SoloLetras(txtNombre);
+        va.SeleccionarTodo(txtNombre);
+        txtApellido.setEnabled(true);
+        va.SoloLetras(txtApellido);
+        va.SeleccionarTodo(txtApellido);
+        txtEdad.setEnabled(true);
+        va.LetrasNumeros(txtEdad);
+        va.SeleccionarTodo(txtEdad);
+        txtNombre.requestFocus();
     }
     
     private void Deshabilitar() {
-        txtNombres.setEnabled(false);
-        txtApellidos.setEnabled(false);
-        txtCarnet.setEnabled(false);
-        txtEmail.setEnabled(false);
-        txtCelular.setEnabled(false);
+        txtNombre.setEnabled(false);
+        txtApellido.setEnabled(false);
+        txtEdad.setEnabled(false);
     }
     
     public void limpiar(){
-         txtNombres.setText("");
-         txtApellidos.setText("");
-         txtCarnet.setText("");         
-         txtEmail.setText("");
-         txtCelular.setText("");
+         txtNombre.setText("");
+         txtApellido.setText("");
+         txtEdad.setText("");
     }
     
     private void BotonesInicio(){
@@ -105,70 +94,63 @@ public class PacienteIF extends javax.swing.JInternalFrame {
     
     //Llena con datos el JTable con un consulta
     private void LlenarTabla() {
-        int[] anchos = {30, 140, 140, 80, 80, 80, 250};
+        int[] anchos = {30, 200, 80, 80};
         cnx.Conecta();
         try{
-            String [] titulos ={"ID","Nombres", "Apellidos", "Carnet","Celular","Email"};
-            String SQL = "Select * from estudiante_view";
+            String [] titulos ={"ID","Nombre", "Edad","Género"};
+            String SQL = "Select idpaciente, concat(nombre, ' ', apellido) as "
+                    + "nombre_completo, edad, genero from paciente";
             model = new DefaultTableModel(null, titulos);
             stm = cnx.conn.createStatement();
             rs = stm.executeQuery(SQL);
-            String [] fila = new String[6];
+            String [] fila = new String[4];
             while(rs.next()){
-                fila[0] = rs.getString("idestudiante");
-                fila[1] = rs.getString("nombreE");
-                fila[2] = rs.getString("apellidoE");
-                fila[3] = rs.getString("carnet");
-                fila[4] = rs.getString("celular");
-                fila[5] = rs.getString("email");                
+                fila[0] = rs.getString("idpaciente");
+                fila[1] = rs.getString("nombre_completo");
+                fila[2] = rs.getString("edad");
+                fila[3] = rs.getString("genero");         
                 model.addRow(fila);
             }
-            tblEstudiantes.setModel(model);
+            tblPacientes.setModel(model);
             
              //Dimensiona el ancho de las columnas de la tabla
-            tblEstudiantes.setModel(model);
-            for(int i = 0; i < tblEstudiantes.getColumnCount(); i++) {
-                tblEstudiantes.getColumnModel().getColumn(i).setPreferredWidth(anchos[i]);
+            tblPacientes.setModel(model);
+            for(int i = 0; i < tblPacientes.getColumnCount(); i++) {
+                tblPacientes.getColumnModel().getColumn(i).setPreferredWidth(anchos[i]);
             }
         } catch(SQLException ex){
-            JOptionPane.showMessageDialog(null, "Error de llenarTabla: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Error al llenar la Tabla de Paciente: " + ex.getMessage());
         } finally {
             cnx.Desconecta();
         }
     }
     
-    private void llenarTXT() {
-        cnx.Conecta();
-         try {             
-            String SQL = "select nombreA from asignatura where idasignatura = " + Globales.id;
-            stm = cnx.conn.createStatement();            
-            rs = stm.executeQuery(SQL);
-            while (rs.next()) {
-                txtAsignatura.setText(rs.getString("nombreA"));
-            }
-            rs.close();            
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Error LlenarTXT: " + ex.getMessage());
-        } finally {
-            cnx.Desconecta();
-         }
-    }
+//    private void llenarTXT() {
+//        cnx.Conecta();
+//         try {             
+//            String SQL = "select nombreA from asignatura where idasignatura = " + Globales.id;
+//            stm = cnx.conn.createStatement();            
+//            rs = stm.executeQuery(SQL);
+//            while (rs.next()) {
+//                txtAsignatura.setText(rs.getString("nombreA"));
+//            }
+//            rs.close();            
+//        } catch (SQLException ex) {
+//            JOptionPane.showMessageDialog(null, "Error LlenarTXT: " + ex.getMessage());
+//        } finally {
+//            cnx.Desconecta();
+//         }
+//    }
     
     private boolean validar(){
         boolean val;
-        if(txtNombres.getText().trim().length()==0){ //Valida campo Nombre
-            JOptionPane.showMessageDialog(this, "El campo de texto Nombres está vacío,por favor llenarlo");
+        if(txtNombre.getText().trim().length()==0){ //Valida campo Nombre
+            JOptionPane.showMessageDialog(this, "Nombre no puede estar vacío");
             val = false;       
-            } else if(txtApellidos.getText().trim().length()==0){ //Valida campo Apellido
-                JOptionPane.showMessageDialog(this, "El campo de texto Apellidos está vacío,por favor llenarlo");
+            } else if(txtApellido.getText().trim().length()==0){ //Valida campo Apellido
+                JOptionPane.showMessageDialog(this, "Apellido no puede estar vacío.");
                 val = false;
-            } else if(txtCelular.getText().trim().length()!=0){ //Valida campo Apellido                                
-                if (txtCelular.getText().trim().length()!=8) {
-                    JOptionPane.showMessageDialog(this, "El campo de texto Celular debe contener 8 dígitos");                
-                val = false;}
-                else {
-                    val=true;
-                }
+            
             } else {
                 val=true;
             }       
@@ -184,17 +166,13 @@ public class PacienteIF extends javax.swing.JInternalFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        txtNombres = new javax.swing.JTextField();
-        txtApellidos = new javax.swing.JTextField();
-        txtCarnet = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
+        txtNombre = new javax.swing.JTextField();
+        txtApellido = new javax.swing.JTextField();
+        txtEdad = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        txtEmail = new javax.swing.JTextField();
-        jLabel6 = new javax.swing.JLabel();
-        txtCelular = new javax.swing.JTextField();
-        txtAsignatura = new javax.swing.JTextField();
+        cbxGenero = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblEstudiantes = new javax.swing.JTable();
+        tblPacientes = new javax.swing.JTable();
         btnNuevo = new javax.swing.JButton();
         btnActualizar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
@@ -203,7 +181,7 @@ public class PacienteIF extends javax.swing.JInternalFrame {
         btnSalir = new javax.swing.JButton();
 
         setForeground(java.awt.Color.blue);
-        setTitle("Catálogo de Estudiantes");
+        setTitle("Pacientes");
         try {
             setSelected(true);
         } catch (java.beans.PropertyVetoException e1) {
@@ -211,7 +189,7 @@ public class PacienteIF extends javax.swing.JInternalFrame {
         }
         setVisible(true);
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Estudiante"));
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Paciente"));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel1.setText("Nombres");
@@ -220,20 +198,12 @@ public class PacienteIF extends javax.swing.JInternalFrame {
         jLabel2.setText("Apellidos");
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel3.setText("Carnet");
-
-        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel4.setText("Asignatura");
+        jLabel3.setText("Edad");
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel5.setText("E mail");
+        jLabel5.setText("Género");
 
-        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel6.setText("Celular");
-
-        txtAsignatura.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        txtAsignatura.setDisabledTextColor(new java.awt.Color(255, 0, 0));
-        txtAsignatura.setEnabled(false);
+        cbxGenero.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Másculino", "Femenino" }));
 
         org.jdesktop.layout.GroupLayout jPanel2Layout = new org.jdesktop.layout.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -242,79 +212,61 @@ public class PacienteIF extends javax.swing.JInternalFrame {
             .add(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
-                        .add(jPanel2Layout.createSequentialGroup()
-                            .add(jLabel1)
-                            .add(18, 18, 18)
-                            .add(txtNombres))
-                        .add(jPanel2Layout.createSequentialGroup()
-                            .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                                .add(jLabel2)
-                                .add(jLabel3)
-                                .add(jLabel5))
-                            .add(18, 18, 18)
-                            .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                                .add(txtApellidos, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 238, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                .add(txtEmail, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 237, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                .add(txtCelular, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 139, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                .add(jPanel2Layout.createSequentialGroup()
-                                    .add(txtCarnet, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 141, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                    .add(34, 34, 34)
-                                    .add(jLabel4)
-                                    .add(18, 18, 18)
-                                    .add(txtAsignatura, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 310, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))))
-                    .add(jLabel6))
-                .addContainerGap(119, Short.MAX_VALUE))
+                    .add(jLabel2)
+                    .add(jLabel3)
+                    .add(jLabel5)
+                    .add(jLabel1))
+                .add(18, 18, 18)
+                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                    .add(txtApellido, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
+                    .add(txtEdad, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 62, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(txtNombre)
+                    .add(cbxGenero, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 118, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(207, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel1)
-                    .add(txtNombres, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .add(18, 18, 18)
+                    .add(txtNombre, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(23, 23, 23)
                 .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel2)
-                    .add(txtApellidos, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(txtApellido, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .add(18, 18, 18)
                 .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel3)
-                    .add(txtCarnet, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jLabel4)
-                    .add(txtAsignatura, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(txtEdad, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel5)
-                    .add(txtEmail, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel6)
-                    .add(txtCelular, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(cbxGenero, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        tblEstudiantes.setModel(new javax.swing.table.DefaultTableModel(
+        tblPacientes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4", "Title 5", "Title 6"
+                "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        tblEstudiantes.addMouseListener(new java.awt.event.MouseAdapter() {
+        tblPacientes.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 JTableMouseClikedPerformed(evt);
             }
         });
-        jScrollPane1.setViewportView(tblEstudiantes);
+        jScrollPane1.setViewportView(tblPacientes);
 
         btnNuevo.setText("Nuevo");
         btnNuevo.addActionListener(new java.awt.event.ActionListener() {
@@ -365,27 +317,30 @@ public class PacienteIF extends javax.swing.JInternalFrame {
             .add(jPanel2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .add(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .add(btnNuevo)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(btnActualizar)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(btnEliminar)
-                .add(12, 12, 12)
-                .add(btnGuardar)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(btnCancelar)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                .add(btnSalir)
-                .addContainerGap(316, Short.MAX_VALUE))
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, jScrollPane1)
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jPanel1Layout.createSequentialGroup()
+                        .add(btnNuevo)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(btnActualizar)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                        .add(btnEliminar)
+                        .add(12, 12, 12)
+                        .add(btnGuardar)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                        .add(btnCancelar)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                        .add(btnSalir)
+                        .add(0, 27, Short.MAX_VALUE))
+                    .add(jScrollPane1))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanel1Layout.createSequentialGroup()
                 .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 169, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(btnGuardar)
                     .add(btnActualizar)
@@ -423,14 +378,13 @@ public class PacienteIF extends javax.swing.JInternalFrame {
         int i = JOptionPane.showConfirmDialog(null, "Actualizar?","Confirmar",
             JOptionPane.OK_CANCEL_OPTION,JOptionPane.ERROR_MESSAGE);
         if(i==JOptionPane.OK_OPTION){        
-            int fila = tblEstudiantes.getSelectedRow();
-            e.setNombre(txtNombres.getText().trim());
-            e.setApellidos(txtApellidos.getText().trim());
-            e.setCarnet(txtCarnet.getText().trim());
-            e.setCelular(txtCelular.getText().trim());
-            e.setEmail(txtEmail.getText().trim());
-            e.setIdEstudiante(Integer.parseInt(tblEstudiantes.getValueAt(fila, 0).toString()));
-            e.actualizarEstudiante();
+            int fila = tblPacientes.getSelectedRow();
+            pa.setNombre(txtNombre.getText().trim());
+            pa.setApellido(txtApellido.getText().trim());
+            pa.setEdad(Integer.parseInt(txtEdad.getText().trim()));
+            pa.setGenero(this.cbxGenero.getSelectedItem().toString().trim());
+            pa.setIdpaciente(Integer.parseInt(tblPacientes.getValueAt(fila, 0).toString()));
+            pa.actualizarPaciente();
             }
         LlenarTabla();
         limpiar();
@@ -443,9 +397,9 @@ public class PacienteIF extends javax.swing.JInternalFrame {
         int i = JOptionPane.showConfirmDialog(null, "Desea Eliminar?","Confirmar",
             JOptionPane.OK_CANCEL_OPTION,JOptionPane.ERROR_MESSAGE);
         if(i==JOptionPane.OK_OPTION){
-            int fila = tblEstudiantes.getSelectedRow();
-            e.setIdEstudiante(Integer.parseInt(tblEstudiantes.getValueAt(fila, 0).toString()));
-            e.eliminarEstudiante();
+            int fila = tblPacientes.getSelectedRow();
+            pa.setIdpaciente(Integer.parseInt(tblPacientes.getValueAt(fila, 0).toString()));
+            pa.eliminarPaciente();
         }
         limpiar();
         Deshabilitar();
@@ -458,12 +412,11 @@ public class PacienteIF extends javax.swing.JInternalFrame {
         int i = JOptionPane.showConfirmDialog(null, "Desea Guardar?","Confirmar",
             JOptionPane.OK_CANCEL_OPTION,JOptionPane.ERROR_MESSAGE);
         if(i==JOptionPane.OK_OPTION){
-            e.setNombre(txtNombres.getText().trim());
-            e.setApellidos(txtApellidos.getText().trim());
-            e.setCarnet(txtCarnet.getText().trim());
-            e.setCelular(txtCelular.getText().trim());
-            e.setEmail(txtEmail.getText().trim());
-            e.guardarEstudiante();
+            pa.setNombre(txtNombre.getText().trim());
+            pa.setApellido(txtApellido.getText().trim());
+            pa.setEdad(Integer.parseInt(txtEdad.getText().trim()));
+            pa.setGenero(cbxGenero.getSelectedItem().toString().trim());
+            pa.guardarPaciente();
         }
         LlenarTabla();
         limpiar();
@@ -489,23 +442,22 @@ public class PacienteIF extends javax.swing.JInternalFrame {
 
     private void JTableMouseClikedPerformed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JTableMouseClikedPerformed
         if (evt.getButton()==1){
-            int fila = tblEstudiantes.getSelectedRow();
+            int fila = tblPacientes.getSelectedRow();
             Habilitar();
             BotonesClick();
             cnx.Conecta();
             try{                                               
-                String SQL = "Select * from estudiante where idestudiante = " + tblEstudiantes.getValueAt(fila, 0);
+                String SQL = "Select * from paciente where idpaciente = " + tblPacientes.getValueAt(fila, 0);
                 stm = cnx.conn.createStatement();
                 rs = stm.executeQuery(SQL);
                 
                 rs.next();
-                txtNombres.setText(rs.getString("nombreE"));
-                txtApellidos.setText(rs.getString("apellidoE"));
-                txtCarnet.setText(rs.getString("carnet"));
-                txtCelular.setText(rs.getString("celular"));
-                txtEmail.setText(rs.getString("email"));
+                txtNombre.setText(rs.getString("nombre"));
+                txtApellido.setText(rs.getString("apellido"));
+                txtEdad.setText(String.valueOf(rs.getInt("edad")));
+                cbxGenero.setSelectedItem(rs.getString("genero"));
             } catch(SQLException ex){
-                JOptionPane.showMessageDialog(null, "Error MouseCliked: " + ex.getMessage());
+                JOptionPane.showMessageDialog(null, "Error al marcar con el Mouse en la tabla: " + ex.getMessage());
             }  finally {
                 cnx.Desconecta();
             }
@@ -519,21 +471,17 @@ public class PacienteIF extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JButton btnSalir;
+    private javax.swing.JComboBox<String> cbxGenero;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tblEstudiantes;
-    private javax.swing.JTextField txtApellidos;
-    private javax.swing.JTextField txtAsignatura;
-    private javax.swing.JTextField txtCarnet;
-    private javax.swing.JTextField txtCelular;
-    private javax.swing.JTextField txtEmail;
-    private javax.swing.JTextField txtNombres;
+    private javax.swing.JTable tblPacientes;
+    private javax.swing.JTextField txtApellido;
+    private javax.swing.JTextField txtEdad;
+    private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 }

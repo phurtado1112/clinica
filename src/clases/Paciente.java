@@ -15,13 +15,11 @@ import util.Conecta;
  */
 public class Paciente {
 
-    private int idestudiante;
-    private String apellidos;
-    private String carne;
-    private String celular;
-    private String email;
+    private int idpaciente;
     private String nombre;
-    private int idasignatura;
+    private String apellido;
+    private int edad;
+    private String genero;
     Conecta cnx = new Conecta();
     PreparedStatement ps;
     ResultSet rs;
@@ -30,214 +28,186 @@ public class Paciente {
 
     }
 
-    public Paciente(String apellidos, String carne, String celular, String email, String nombre, int idestudiante, int idasignatura) {
-        this.apellidos = apellidos;
-        this.carne = carne;
-        this.celular = celular;
-        this.email = email;
+    public Paciente(int idpaciente, String nombre, String apellido, int edad, String genero) {
+        this.idpaciente = idpaciente;
         this.nombre = nombre;
-        this.idestudiante = idestudiante;
-        this.idasignatura = idasignatura;
+        this.apellido = apellido;
+        this.edad = edad;
+        this.genero = genero;
     }
 
-    public int getIdEstudiante() {
-        return idestudiante;
+    public int getIdpaciente() {
+        return idpaciente;
     }
 
-    public void setIdEstudiante(int idestudiante) {
-        this.idestudiante = idestudiante;
-    }
-        
-    public String getApellidos(){
-            return apellidos;
+    public void setIdpaciente(int idpaciente) {
+        this.idpaciente = idpaciente;
     }
 
-    public String getCarnet(){
-            return carne;
+    public String getNombre() {
+        return nombre;
     }
 
-    public String getCelular(){
-            return celular;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
-    public String getEmail(){
-            return email;
+    public String getApellido() {
+        return apellido;
     }
 
-    public String getNombre(){
-            return nombre;
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
     }
 
-    public void setApellidos(String apellid){
-            apellidos = apellid;
+    public int getEdad() {
+        return edad;
     }
 
-    public void setCarnet(String carn){
-            carne = carn;
+    public void setEdad(int edad) {
+        this.edad = edad;
     }
 
-    public void setCelular(String celula){
-            celular = celula;
+    public String getGenero() {
+        return genero;
     }
 
-    public void setEmail(String correo){
-            email = correo;
-    }
-
-    public void setNombre(String nombr){
-            nombre = nombr;
-    }
-
-    public int getIdAsignatura() {
-        return idasignatura;
-    }
-
-    public void setIdAsignatura(int idasignatura) {
-        this.idasignatura = idasignatura;
-    }
-
-    @Override
-    public String toString(){
-        return this.nombre+" "+this.apellidos;
-    }
-
-    public void actualizarEstudiante(){
-        cnx.Conecta();
-            try{
-                String SQL ="update estudiante set nombreE=?,apellidoE=?,"
-                        + "carnet=?,celular=?, email=?,"
-                        + " idasignatura=? where idestudiante=?";
-
-                ps = cnx.conn.prepareStatement(SQL);
-                ps.setString(1, nombre);
-                ps.setString(2, apellidos);
-                ps.setString(3, carne);
-                ps.setString(4, celular);
-                ps.setString(5, email);
-                ps.setInt(6, idasignatura);
-                ps.setInt(7, idestudiante);
-                int n = ps.executeUpdate();
-                if(n>0){
-                    JOptionPane.showMessageDialog(null, "Datos actualizados correctamente");                
-                }
-                
-                ps.close();
-            }catch(SQLException | HeadlessException e){
-                JOptionPane.showMessageDialog(null, "Error Actualizar: " + e.getMessage());
-            } finally {                
-                cnx.Desconecta();
-            }
+    public void setGenero(String genero) {
+        this.genero = genero;
     }
     
-    public void eliminarEstudiante(){
+    public void guardarPaciente(){
         cnx.Conecta();
             try {
-                String SQL = "delete from estudiante where idestudiante= ?";
-                
-                ps = cnx.conn.prepareStatement(SQL);
-                ps.setInt(1, idestudiante);
-                int n = ps.executeUpdate();
-                if(n>0){                
-                    JOptionPane.showMessageDialog(null, "Datos eliminados correctamente");
-                }
-                
-                ps.close();
-            } catch(SQLException | HeadlessException e){
-                JOptionPane.showMessageDialog(null, "Error Eliminar: " + e.getMessage());
-            } finally {                
-                cnx.Desconecta();
-            }
-    }
-    
-    public void guardarEstudiante(){
-        cnx.Conecta();
-            try {
-                String SQL = "insert into estudiante(nombreE,apellidoE,carnet,celular,email,idasignatura) "
-                + "values(?,?,?,?,?,?)";
+                String SQL = "insert into paciente(nombre,apellido,edad,genero) "
+                + "values(?,?,?,?)";
                 
                 ps = cnx.conn.prepareStatement(SQL);
                 ps.setString(1, nombre);
-                ps.setString(2, apellidos);
-                ps.setString(3, carne);
-                ps.setString(4, celular);
-                ps.setString(5, email);
-                ps.setInt(6, idasignatura);                       
+                ps.setString(2, apellido);
+                ps.setInt(3, edad);
+                ps.setString(4, genero);                   
                 int n = ps.executeUpdate();
                 if (n>0){
-                    JOptionPane.showMessageDialog(null, "Datos guardados correctamente");                
+                    JOptionPane.showMessageDialog(null, "Datos de Paciente guardados correctamente");                
                 }
                 
                 ps.close();
             } catch(SQLException | HeadlessException e){
-                JOptionPane.showMessageDialog(null, "Error Guardar: " + e.getMessage());
+                JOptionPane.showMessageDialog(null, "Error al Guardar los datos del Paciente: " + e.getMessage());
             } finally {
                 cnx.Desconecta();
             }
     }
+
+    public void actualizarPaciente(){
+        cnx.Conecta();
+            try{
+                String SQL ="update paciente set nombre=?,apellido=?,"
+                        + "edad=?,genero=? where idpaciente=?";
+
+                ps = cnx.conn.prepareStatement(SQL);
+                ps.setString(1, nombre);
+                ps.setString(2, apellido);
+                ps.setInt(3, edad);
+                ps.setString(4, genero);
+                ps.setInt(5, idpaciente);
+                int n = ps.executeUpdate();
+                if(n>0){
+                    JOptionPane.showMessageDialog(null, "Datos de Paciente actualizados correctamente");                
+                }
+                
+                ps.close();
+            }catch(SQLException | HeadlessException e){
+                JOptionPane.showMessageDialog(null, "Error al Actualizar los datos del paciente: " + e.getMessage());
+            } finally {                
+                cnx.Desconecta();
+            }
+    }
     
-    public int consultaId(String Nombr, String Apell){
-        int id = 0;
+    public void eliminarPaciente(){
         cnx.Conecta();
-        try{
-            String SQL = "Select idestudiante from estudiante where nombreE = "+"\""+Nombr+"\""
-                    + "and apellidoE="+"\""+Apell+"\"";
-            
-            ps = cnx.conn.prepareStatement(SQL);
-            rs = ps.executeQuery();            
-            while(rs.next()){
-                id = rs.getInt("idestudiante");
+            try {
+                String SQL = "delete from paciente where idpaciente= ?";
+                
+                ps = cnx.conn.prepareStatement(SQL);
+                ps.setInt(1, idpaciente);
+                int n = ps.executeUpdate();
+                if(n>0){                
+                    JOptionPane.showMessageDialog(null, "Datos de Paciente eliminados correctamente");
+                }
+                
+                ps.close();
+            } catch(SQLException | HeadlessException e){
+                JOptionPane.showMessageDialog(null, "Error al Eliminar datos de Paciente: " + e.getMessage());
+            } finally {                
+                cnx.Desconecta();
             }
-            
-            ps.close();
-        } catch(SQLException | HeadlessException e){
-            JOptionPane.showMessageDialog(null, "Error consulta ID Estudiante: " + e.getMessage());
-        } finally {
-        cnx.Desconecta();       
-        }
-        return id;
     }
+    
+//    public int consultaId(String Nombr, String Apell){
+//        int id = 0;
+//        cnx.Conecta();
+//        try{
+//            String SQL = "Select idestudiante from estudiante where nombreE = "+"\""+Nombr+"\""
+//                    + "and apellidoE="+"\""+Apell+"\"";
+//            
+//            ps = cnx.conn.prepareStatement(SQL);
+//            rs = ps.executeQuery();            
+//            while(rs.next()){
+//                id = rs.getInt("idestudiante");
+//            }
+//            
+//            ps.close();
+//        } catch(SQLException | HeadlessException e){
+//            JOptionPane.showMessageDialog(null, "Error consulta ID Estudiante: " + e.getMessage());
+//        } finally {
+//        cnx.Desconecta();       
+//        }
+//        return id;
+//    }
 
-    public String[] consultaEstudiante(int id){
-        String [] fila = new String[2];
-        cnx.Conecta();
-        try{
-            String SQL = "Select nombreE, apellidoE from estudiante where idestudiante="+id;
-            
-            ps = cnx.conn.prepareStatement(SQL);
-            rs = ps.executeQuery();
-            while(rs.next()){
-                fila[0] = rs.getString("nombreE");
-                fila[1] = rs.getString("apellidoE");
-            }
-            
-            ps.close();
-        } catch(SQLException | HeadlessException e){
-            JOptionPane.showMessageDialog(null, "Error consulta Nombre Estidiante: " + e.getMessage());
-        } finally {
-        cnx.Desconecta();
-        }
-        return fila;
-    }
+//    public String[] consultaEstudiante(int id){
+//        String [] fila = new String[2];
+//        cnx.Conecta();
+//        try{
+//            String SQL = "Select nombreE, apellidoE from estudiante where idestudiante="+id;
+//            
+//            ps = cnx.conn.prepareStatement(SQL);
+//            rs = ps.executeQuery();
+//            while(rs.next()){
+//                fila[0] = rs.getString("nombreE");
+//                fila[1] = rs.getString("apellidoE");
+//            }
+//            
+//            ps.close();
+//        } catch(SQLException | HeadlessException e){
+//            JOptionPane.showMessageDialog(null, "Error consulta Nombre Estidiante: " + e.getMessage());
+//        } finally {
+//        cnx.Desconecta();
+//        }
+//        return fila;
+//    }
 
-    public ArrayList<String> listaEstudiante(){
-        cnx.Conecta();
-        ArrayList<String> ls = new ArrayList<>();
-        try{
-            String SQL = "Select nombreE, apellidoE from estudiante";
-            
-            ps = cnx.conn.prepareStatement(SQL);
-            rs = ps.executeQuery();            
-            while(rs.next()){
-                ls.add(rs.getString("nombreE"));
-                ls.add(rs.getString("apellidoE"));
-            }
-            
-            ps.close();
-        } catch(SQLException | HeadlessException e){
-            JOptionPane.showMessageDialog(null, "Error consultaUniversidad: " + e.getMessage());
-        } finally {
-        cnx.Desconecta();
-        }
-        return ls;                                  
-    } 
+//    public ArrayList<String> listaEstudiante(){
+//        cnx.Conecta();
+//        ArrayList<String> ls = new ArrayList<>();
+//        try{
+//            String SQL = "Select nombreE, apellidoE from estudiante";
+//            
+//            ps = cnx.conn.prepareStatement(SQL);
+//            rs = ps.executeQuery();            
+//            while(rs.next()){
+//                ls.add(rs.getString("nombreE"));
+//                ls.add(rs.getString("apellidoE"));
+//            }
+//            
+//            ps.close();
+//        } catch(SQLException | HeadlessException e){
+//            JOptionPane.showMessageDialog(null, "Error consultaUniversidad: " + e.getMessage());
+//        } finally {
+//        cnx.Desconecta();
+//        }
+//        return ls;                                  
+//    } 
 }

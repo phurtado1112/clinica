@@ -4,7 +4,6 @@ import java.awt.HeadlessException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import util.Conecta;
 
@@ -73,8 +72,7 @@ public class Medico {
     public void ActualizarMedico(){
     cnx.Conecta();
         try{
-            String SQL ="update medico set nombre=?, apellido=?, idespecialidad=?"
-            + "where idmedico=?";
+            String SQL ="update medico set nombre=?, apellido=?, idespecialidad=? where idmedico=?";
             
             ps = cnx.conn.prepareStatement(SQL);
             ps.setString(1, nombre);

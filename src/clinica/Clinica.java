@@ -11,6 +11,7 @@ import java.beans.PropertyVetoException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JInternalFrame;
+import vistas.HistorialClinicoIF;
 
 /**
  *
@@ -59,17 +60,14 @@ public final class Clinica extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         MnuPrArchivo = new javax.swing.JMenu();
         MnuSalir = new javax.swing.JMenuItem();
-        MnuPrOperaciones = new javax.swing.JMenu();
         MnuPrCatalogo = new javax.swing.JMenu();
-        MnuEstudiantes = new javax.swing.JMenuItem();
+        mnuHistorial = new javax.swing.JMenuItem();
+        MnuPacientes = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
-        MnuTipomedico = new javax.swing.JMenuItem();
-        MnuUniversidades = new javax.swing.JMenuItem();
+        MnuMedico = new javax.swing.JMenuItem();
+        MnuEspecialidad = new javax.swing.JMenuItem();
         jSeparator3 = new javax.swing.JPopupMenu.Separator();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        MnuPrReportes = new javax.swing.JMenu();
-        MnuPrUtilitarios = new javax.swing.JMenu();
-        MnuPrAyuda = new javax.swing.JMenu();
+        mnuUsuario = new javax.swing.JMenuItem();
 
         jMenuItem5.setText("jMenuItem5");
 
@@ -79,9 +77,13 @@ public final class Clinica extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jMenuBar1.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+
         MnuPrArchivo.setMnemonic('A');
         MnuPrArchivo.setText("Archivo");
+        MnuPrArchivo.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
 
+        MnuSalir.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         MnuSalir.setMnemonic('s');
         MnuSalir.setText("Salir");
         MnuSalir.addActionListener(new java.awt.event.ActionListener() {
@@ -93,68 +95,72 @@ public final class Clinica extends javax.swing.JFrame {
 
         jMenuBar1.add(MnuPrArchivo);
 
-        MnuPrOperaciones.setMnemonic('o');
-        MnuPrOperaciones.setText("Registros");
-        jMenuBar1.add(MnuPrOperaciones);
-
         MnuPrCatalogo.setMnemonic('c');
         MnuPrCatalogo.setText("Catálogos");
+        MnuPrCatalogo.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
 
-        MnuEstudiantes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/enfermera.png"))); // NOI18N
-        MnuEstudiantes.setMnemonic('e');
-        MnuEstudiantes.setText("Pacientes");
-        MnuEstudiantes.addActionListener(new java.awt.event.ActionListener() {
+        mnuHistorial.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_H, java.awt.event.InputEvent.CTRL_MASK));
+        mnuHistorial.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        mnuHistorial.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/notepad.png"))); // NOI18N
+        mnuHistorial.setText("Historial");
+        mnuHistorial.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MnuEstudiantesActionPerformed(evt);
+                mnuHistorialActionPerformed(evt);
             }
         });
-        MnuPrCatalogo.add(MnuEstudiantes);
+        MnuPrCatalogo.add(mnuHistorial);
+
+        MnuPacientes.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_MASK));
+        MnuPacientes.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        MnuPacientes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/enfermera.png"))); // NOI18N
+        MnuPacientes.setMnemonic('e');
+        MnuPacientes.setText("Pacientes");
+        MnuPacientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MnuPacientesActionPerformed(evt);
+            }
+        });
+        MnuPrCatalogo.add(MnuPacientes);
         MnuPrCatalogo.add(jSeparator2);
 
-        MnuTipomedico.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/doctor.png"))); // NOI18N
-        MnuTipomedico.setMnemonic('p');
-        MnuTipomedico.setText("Medico");
-        MnuTipomedico.addActionListener(new java.awt.event.ActionListener() {
+        MnuMedico.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_M, java.awt.event.InputEvent.CTRL_MASK));
+        MnuMedico.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        MnuMedico.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/doctor.png"))); // NOI18N
+        MnuMedico.setMnemonic('p');
+        MnuMedico.setText("Medico");
+        MnuMedico.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MnuTipomedicoActionPerformed(evt);
+                MnuMedicoActionPerformed(evt);
             }
         });
-        MnuPrCatalogo.add(MnuTipomedico);
+        MnuPrCatalogo.add(MnuMedico);
 
-        MnuUniversidades.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/farmacia.png"))); // NOI18N
-        MnuUniversidades.setMnemonic('u');
-        MnuUniversidades.setText("Especialidad");
-        MnuUniversidades.addActionListener(new java.awt.event.ActionListener() {
+        MnuEspecialidad.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
+        MnuEspecialidad.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        MnuEspecialidad.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/farmacia.png"))); // NOI18N
+        MnuEspecialidad.setMnemonic('u');
+        MnuEspecialidad.setText("Especialidad");
+        MnuEspecialidad.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MnuUniversidadesActionPerformed(evt);
+                MnuEspecialidadActionPerformed(evt);
             }
         });
-        MnuPrCatalogo.add(MnuUniversidades);
+        MnuPrCatalogo.add(MnuEspecialidad);
         MnuPrCatalogo.add(jSeparator3);
 
-        jMenuItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/grupo.png"))); // NOI18N
-        jMenuItem1.setMnemonic('d');
-        jMenuItem1.setText("Usuario");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        mnuUsuario.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.CTRL_MASK));
+        mnuUsuario.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        mnuUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/grupo.png"))); // NOI18N
+        mnuUsuario.setMnemonic('d');
+        mnuUsuario.setText("Usuario");
+        mnuUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                mnuUsuarioActionPerformed(evt);
             }
         });
-        MnuPrCatalogo.add(jMenuItem1);
+        MnuPrCatalogo.add(mnuUsuario);
 
         jMenuBar1.add(MnuPrCatalogo);
-
-        MnuPrReportes.setMnemonic('r');
-        MnuPrReportes.setText("Reportes");
-        jMenuBar1.add(MnuPrReportes);
-
-        MnuPrUtilitarios.setMnemonic('u');
-        MnuPrUtilitarios.setText("Utilitarios");
-        jMenuBar1.add(MnuPrUtilitarios);
-
-        MnuPrAyuda.setMnemonic('y');
-        MnuPrAyuda.setText("Ayuda");
-        jMenuBar1.add(MnuPrAyuda);
 
         setJMenuBar(jMenuBar1);
 
@@ -166,13 +172,13 @@ public final class Clinica extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(Escritorio, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
+            .addComponent(Escritorio, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void MnuTipomedicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnuTipomedicoActionPerformed
+    private void MnuMedicoActionPerformed(java.awt.event.ActionEvent evt) {                                              
         MedicoIF medicoVent = new MedicoIF();
         centerJIF(medicoVent);
         Escritorio.add(medicoVent);
@@ -183,7 +189,7 @@ public final class Clinica extends javax.swing.JFrame {
             Logger.getLogger(Clinica.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-    }//GEN-LAST:event_MnuTipomedicoActionPerformed
+    }                                         
 
     private void MnuSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnuSalirActionPerformed
         int i = JOptionPane.showConfirmDialog(null, "Desea Salir?","Confirmar",
@@ -192,61 +198,71 @@ public final class Clinica extends javax.swing.JFrame {
             System.exit(0);}
     }//GEN-LAST:event_MnuSalirActionPerformed
 
-    private void MnuUniversidadesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnuUniversidadesActionPerformed
-        EspecialidadIF universidadVent = new EspecialidadIF();
-        centerJIF(universidadVent);
-        Escritorio.add(universidadVent);
-        universidadVent.toFront();
+    private void MnuEspecialidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnuEspecialidadActionPerformed
+        EspecialidadIF especialidadVent = new EspecialidadIF();
+        centerJIF(especialidadVent);
+        Escritorio.add(especialidadVent);
+        especialidadVent.toFront();
         try {
-            universidadVent.setSelected(true);
+            especialidadVent.setSelected(true);
         } catch (PropertyVetoException ex) {
             Logger.getLogger(Clinica.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_MnuUniversidadesActionPerformed
+    }//GEN-LAST:event_MnuEspecialidadActionPerformed
 
-    private void MnuEstudiantesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnuEstudiantesActionPerformed
-        PacienteIF estudianteVent = new PacienteIF();
-        centerJIF(estudianteVent);
-        Escritorio.add(estudianteVent);
-        estudianteVent.toFront();
+    private void MnuPacientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MnuPacientesActionPerformed
+        PacienteIF pacienteVent = new PacienteIF();
+        centerJIF(pacienteVent);
+        Escritorio.add(pacienteVent);
+        pacienteVent.toFront();
         try {
-            estudianteVent.setSelected(true);
+            pacienteVent.setSelected(true);
         } catch (PropertyVetoException ex) {
             Logger.getLogger(Clinica.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_MnuEstudiantesActionPerformed
+    }//GEN-LAST:event_MnuPacientesActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        UsuarioIF  docenteVent = new UsuarioIF();
-        centerJIF(docenteVent);
-        Escritorio.add(docenteVent);
-        docenteVent.toFront();
+    private void mnuUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuUsuarioActionPerformed
+        UsuarioIF  usuarioVent = new UsuarioIF();
+        centerJIF(usuarioVent);
+        Escritorio.add(usuarioVent);
+        usuarioVent.toFront();
         try {
-            docenteVent.setSelected(true);
+            usuarioVent.setSelected(true);
         } catch (PropertyVetoException ex) {
             Logger.getLogger(Clinica.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_mnuUsuarioActionPerformed
+
+    private void mnuHistorialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuHistorialActionPerformed
+        HistorialClinicoIF historialVent = new HistorialClinicoIF();
+        centerJIF(historialVent);
+        Escritorio.add(historialVent);
+        historialVent.toFront();
+        try {
+            historialVent.setSelected(true);
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(Clinica.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }//GEN-LAST:event_mnuHistorialActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane Escritorio;
-    private javax.swing.JMenuItem MnuEstudiantes;
+    private javax.swing.JMenuItem MnuEspecialidad;
+    private javax.swing.JMenuItem MnuMedico;
+    private javax.swing.JMenuItem MnuPacientes;
     private javax.swing.JMenu MnuPrArchivo;
-    private javax.swing.JMenu MnuPrAyuda;
     private javax.swing.JMenu MnuPrCatalogo;
-    private javax.swing.JMenu MnuPrOperaciones;
-    private javax.swing.JMenu MnuPrReportes;
-    private javax.swing.JMenu MnuPrUtilitarios;
     private javax.swing.JMenuItem MnuSalir;
-    private javax.swing.JMenuItem MnuTipomedico;
-    private javax.swing.JMenuItem MnuUniversidades;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
+    private javax.swing.JMenuItem mnuHistorial;
+    private javax.swing.JMenuItem mnuUsuario;
     // End of variables declaration//GEN-END:variables
 }
