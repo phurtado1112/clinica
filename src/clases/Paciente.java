@@ -4,14 +4,13 @@ import java.awt.HeadlessException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import util.Conecta;
 
 /**
  * @author Pablo Hurtado
  * @version 1.0
- * @created 27-mar-2013 10:45:00 PM
+ * @created 27-ago-2017 10:45:00 PM
  */
 public class Paciente {
 
@@ -187,26 +186,4 @@ public class Paciente {
         }
         return fila;
     }
-
-//    public ArrayList<String> listaEstudiante(){
-//        cnx.Conecta();
-//        ArrayList<String> ls = new ArrayList<>();
-//        try{
-//            String SQL = "Select nombreE, apellidoE from estudiante";
-//            
-//            ps = cnx.conn.prepareStatement(SQL);
-//            rs = ps.executeQuery();            
-//            while(rs.next()){
-//                ls.add(rs.getString("nombreE"));
-//                ls.add(rs.getString("apellidoE"));
-//            }
-//            
-//            ps.close();
-//        } catch(SQLException | HeadlessException e){
-//            JOptionPane.showMessageDialog(null, "Error consultaUniversidad: " + e.getMessage());
-//        } finally {
-//        cnx.Desconecta();
-//        }
-//        return ls;                                  
-//    } 
 }

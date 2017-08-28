@@ -83,6 +83,7 @@ public final class Clinica extends javax.swing.JFrame {
         MnuPrArchivo.setText("Archivo");
         MnuPrArchivo.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
 
+        MnuSalir.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
         MnuSalir.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         MnuSalir.setMnemonic('s');
         MnuSalir.setText("Salir");

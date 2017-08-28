@@ -108,7 +108,7 @@ public class MedicoIF extends javax.swing.JInternalFrame {
             cnx.Desconecta();
         }
     }
-    //Llena con datos el JTable con un consulta
+    
     private void LlenarTabla() {
         int[] anchos = {30, 200, 200}; 
         cnx.Conecta();
@@ -126,7 +126,6 @@ public class MedicoIF extends javax.swing.JInternalFrame {
                 model.addRow(fila);
             }
             
-            //Dimensiona el ancho de las columnas de la tabla
             tblMedico.setModel(model);
             for(int i = 0; i < tblMedico.getColumnCount(); i++) {
                 tblMedico.getColumnModel().getColumn(i).setPreferredWidth(anchos[i]);

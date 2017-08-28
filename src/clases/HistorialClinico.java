@@ -6,7 +6,6 @@
 package clases;
 
 import java.awt.HeadlessException;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,7 +14,7 @@ import util.Conecta;
 
 /**
  *
- * @author Pablo Hurtado - PHD Systems
+ * @author Pablo Hurtado
  */
 public class HistorialClinico {
     private int idhistorial_clinico;

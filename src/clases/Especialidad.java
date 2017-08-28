@@ -4,7 +4,6 @@ import java.awt.HeadlessException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import util.Conecta;
 
@@ -124,11 +123,11 @@ public class Especialidad {
         return id;
     }
     
-    public String consultaEspecialidad(int id){
+    public String consultaEspecialidad(int idespecialidad){
         String fila= "";
         cnx.Conecta();
         try{
-            String SQL = "Select descripcion_especialidad from especialidad where idespecialidad= " + id;
+            String SQL = "Select descripcion_especialidad from especialidad where idespecialidad= " + "\"" + idespecialidad + "\"";
             ps = cnx.conn.prepareStatement(SQL);
             rs = ps.executeQuery();
             while(rs.next()){
@@ -140,23 +139,5 @@ public class Especialidad {
         }
         cnx.Desconecta();       
         return fila;
-    }
-    
-//    public ArrayList<String> consultaEspecialidad(){
-//        cnx.Conecta();
-//        ArrayList<String> ls = new ArrayList<>();
-//        try{
-//            String SQL = "Select descripcion_especialidadfrom especialidad";
-//            ps = cnx.conn.prepareStatement(SQL);            
-//            rs = ps.executeQuery();            
-//            while(rs.next()){
-//                ls.add(rs.getString("descripcion_especialidad"));
-//            }
-//            ps.close();
-//        } catch(SQLException | HeadlessException e){
-//            JOptionPane.showMessageDialog(null, "Error al consultar Especialidad: " + e.getMessage());
-//        }
-//        cnx.Desconecta();
-//        return ls;                                  
-//    }    
+    }  
 }

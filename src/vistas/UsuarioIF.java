@@ -25,7 +25,6 @@ public class UsuarioIF extends javax.swing.JInternalFrame {
      * Creates new form UsuarioIF
      */
     
-    //Estos son seis métodos son para manipular la interfaz
     public UsuarioIF() {
         initComponents();
         Deshabilitar();
@@ -86,7 +85,6 @@ public class UsuarioIF extends javax.swing.JInternalFrame {
         btnEliminar.setEnabled(true);
     }
     
-    //Llena con datos el JTable con un consulta
     private void LlenarTabla() {        
         int[] anchos = {30, 100, 100, 80, 80};
         cnx.Conecta();

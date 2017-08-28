@@ -4,7 +4,6 @@ import java.awt.HeadlessException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import util.Conecta;
 
@@ -164,25 +163,4 @@ public class Usuario {
         cnx.Desconecta();       
         return id;
     }
-    
-//    public String consultaUsuario(int id){
-//        String fila= "";
-//        cnx.Conecta();
-//        try{
-//            String SQL = "Select usuario from usuario where idusuario="+id;
-//            
-//            ps = cnx.conn.prepareStatement(SQL);
-//            rs = ps.executeQuery();
-//            while(rs.next()){
-//                fila = rs.getString("usuario");                
-//            }
-//            
-//            ps.close();
-//        } catch(SQLException | HeadlessException e){
-//            JOptionPane.showMessageDialog(null, "Error consulta Nombre Usuario: " + e.getMessage());
-//        }
-//        cnx.Desconecta();       
-//        return fila;
-//    }
-    
 }

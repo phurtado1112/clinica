@@ -10,7 +10,7 @@ import util.Conecta;
 /**
  * @author Pablo Hurtado
  * @version 1.0
- * @created 27-mar-2013 10:45:03 PM
+ * @created 27-ago-2017 10:45:03 PM
  */
 public class Medico {
     private int idmedico;
@@ -168,22 +168,4 @@ public class Medico {
         cnx.Desconecta();       
         return fila;
     }
-    
-//    public ArrayList<String> consultaFacultad(){
-//        cnx.Conecta();
-//        ArrayList<String> ls = new ArrayList<>();
-//        try{
-//            String SQL = "Select nombreF from facultad";
-//            ps = cnx.conn.prepareStatement(SQL);
-//            rs = ps.executeQuery();            
-//            while(rs.next()){
-//                ls.add(rs.getString("nombreF"));
-//            }            
-//            ps.close();
-//        } catch(SQLException | HeadlessException e){
-//            JOptionPane.showMessageDialog(null, "Error consultaFacultad: " + e.getMessage());
-//        }
-//        cnx.Desconecta();
-//        return ls;                                  
-//    }
 }

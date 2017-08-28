@@ -15,7 +15,6 @@ public class SesionInicio extends JFrame {
     String Contrasena;
     Conecta cnx = new Conecta();
     Clinica cli = new Clinica();
-    //SeleccionarAsignatura sa = new SeleccionarAsignatura();
     Statement st;
     ResultSet rs;
  
@@ -32,8 +31,6 @@ public class SesionInicio extends JFrame {
     }
     
     private void validarUsuario() {
-              
-        //comprobacion de los datos de lal usuario y contraseña
         if(this.txtUsuario.getText().equals("")){
             JOptionPane.showMessageDialog(this, "HAY VALORES SIN INGRESAR");
         } else {

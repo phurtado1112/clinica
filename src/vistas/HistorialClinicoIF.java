@@ -4,7 +4,6 @@ import clases.HistorialClinico;
 import clases.Medico;
 import clases.Paciente;
 import java.awt.HeadlessException;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;

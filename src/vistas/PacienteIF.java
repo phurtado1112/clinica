@@ -125,23 +125,6 @@ public class PacienteIF extends JInternalFrame {
         }
     }
     
-//    private void llenarTXT() {
-//        cnx.Conecta();
-//         try {             
-//            String SQL = "select nombreA from asignatura where idasignatura = " + Globales.id;
-//            stm = cnx.conn.createStatement();            
-//            rs = stm.executeQuery(SQL);
-//            while (rs.next()) {
-//                txtAsignatura.setText(rs.getString("nombreA"));
-//            }
-//            rs.close();            
-//        } catch (SQLException ex) {
-//            JOptionPane.showMessageDialog(null, "Error LlenarTXT: " + ex.getMessage());
-//        } finally {
-//            cnx.Desconecta();
-//         }
-//    }
-    
     private boolean validar(){
         boolean val;
         if(txtNombre.getText().trim().length()==0){ //Valida campo Nombre
