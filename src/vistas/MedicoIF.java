@@ -176,7 +176,7 @@ public class MedicoIF extends javax.swing.JInternalFrame {
         btnCancelar = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
 
-        setTitle("Médico");
+        setTitle("Médicos");
         try {
             setSelected(true);
         } catch (java.beans.PropertyVetoException e1) {

@@ -136,7 +136,7 @@ public class EspecialidadIF extends javax.swing.JInternalFrame {
         btnSalir = new javax.swing.JButton();
 
         setResizable(true);
-        setTitle("Catálogo de Especialidad");
+        setTitle("Especialidades");
         try {
             setSelected(true);
         } catch (java.beans.PropertyVetoException e1) {

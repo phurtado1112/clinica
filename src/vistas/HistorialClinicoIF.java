@@ -1,12 +1,20 @@
 package vistas;
 
+import clases.HistorialClinico;
 import clases.Medico;
 import clases.Paciente;
+import java.awt.HeadlessException;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 import util.Conecta;
 import util.Valida;
@@ -26,24 +34,32 @@ public class HistorialClinicoIF extends javax.swing.JInternalFrame {
     DefaultComboBoxModel modeloCombo;
     Paciente pa = new Paciente();
     Medico me = new Medico();
+    HistorialClinico hc = new HistorialClinico();
     Conecta cnx = new Conecta();
     Valida va = new Valida();
     Statement stm;
     ResultSet rs;
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     /**
      * Creates new form HistorialClinicoIF1
      */
     public HistorialClinicoIF() {
         initComponents();
-
+        this.llenarCbxPaciente();
+        this.llenarCbxMedico();
+        cnx.Conecta();
+        Deshabilitar();
+        LlenarTabla();
+        BotonesInicio();
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }
     
     public void limpiar(){
         cbxPaciente.removeAllItems();
         cbxMedico.removeAllItems();
         txtObservacion.setText("");
-        fecha.cleanup();
+        dfecha.cleanup();
     }
     
     public void Habilitar(){
@@ -51,14 +67,14 @@ public class HistorialClinicoIF extends javax.swing.JInternalFrame {
         cbxPaciente.requestFocus();
         cbxPaciente.setEnabled(true);
         cbxMedico.setEnabled(true);
-        fecha.setEnabled(true);
+        dfecha.setEnabled(true);
     }
     
     private void Deshabilitar() {
         txtObservacion.setEnabled(false);
         cbxPaciente.setEnabled(false);
         cbxMedico.setEnabled(false);
-        fecha.setEnabled(false);
+        dfecha.setEnabled(false);
     }
     
     private void BotonesInicio(){
@@ -66,7 +82,6 @@ public class HistorialClinicoIF extends javax.swing.JInternalFrame {
         btnActualizar.setEnabled(false);
         btnEliminar.setEnabled(false);
         btnGuardar.setEnabled(false);
-//        btnCancelar.setEnabled(false);
     }
     
     private void BotonesNuevo(){
@@ -74,14 +89,12 @@ public class HistorialClinicoIF extends javax.swing.JInternalFrame {
         btnActualizar.setEnabled(false);
         btnEliminar.setEnabled(false);
         btnGuardar.setEnabled(true);
-//        btnCancelar.setEnabled(true);
     }
     
     private void BotonesClick(){
         btnNuevo.setEnabled(false);
         btnGuardar.setEnabled(false);
         btnActualizar.setEnabled(true);
-//        btnCancelar.setEnabled(true);
         btnEliminar.setEnabled(true);
     }
     
@@ -89,32 +102,79 @@ public class HistorialClinicoIF extends javax.swing.JInternalFrame {
         int[] anchos = {30, 250, 100};
         cnx.Conecta();
         try{
-            String [] titulos ={"ID","Paciente", "Médico","Observacion"};
-            String SQL = "Select idpaciente, concat(nombre, ' ', apellido) as "
-                    + "nombre_completo, edad, genero from paciente";
+            String [] titulos ={"ID","Paciente", "Médico"};
+            String SQL = "Select idhistorial_clinico, nombre_paciente, nombre_medico from historial_clinico_view";
             model = new DefaultTableModel(null, titulos);
             stm = cnx.conn.createStatement();
             rs = stm.executeQuery(SQL);
-            String [] fila = new String[4];
+            String [] fila = new String[3];
             while(rs.next()){
-                fila[0] = rs.getString("idpaciente");
-                fila[1] = rs.getString("nombre_completo");
-                fila[2] = rs.getString("edad");
-                fila[3] = rs.getString("genero");         
+                fila[0] = rs.getString("idhistorial_clinico");
+                fila[1] = rs.getString("nombre_paciente");
+                fila[2] = rs.getString("nombre_medico");
                 model.addRow(fila);
             }
-            tblPacientes.setModel(model);
+            tblHistorial.setModel(model);
             
              //Dimensiona el ancho de las columnas de la tabla
-            tblPacientes.setModel(model);
-            for(int i = 0; i < tblPacientes.getColumnCount(); i++) {
-                tblPacientes.getColumnModel().getColumn(i).setPreferredWidth(anchos[i]);
+            tblHistorial.setModel(model);
+            for(int i = 0; i < tblHistorial.getColumnCount(); i++) {
+                tblHistorial.getColumnModel().getColumn(i).setPreferredWidth(anchos[i]);
             }
         } catch(SQLException ex){
-            JOptionPane.showMessageDialog(null, "Error al llenar la Tabla de Paciente: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Error al llenar la Tabla de Historial: " + ex.getMessage());
         } finally {
             cnx.Desconecta();
         }
+    }
+    
+    public final void llenarCbxMedico() {
+        cnx.Conecta();
+        try {            
+            modeloCombo = new DefaultComboBoxModel<String>();            
+            String SQL = "select concat(nombre,' ',apellido) as medico from medico";
+            stm = cnx.conn.createStatement();            
+            rs = stm.executeQuery(SQL);
+            while (rs.next()) {
+                modeloCombo.addElement(rs.getString("medico"));
+            }
+            rs.close();
+            cbxMedico.setModel(modeloCombo);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al Llenar el CB de Médico: " + ex.getMessage());
+        } finally {
+            cnx.Desconecta();
+        }
+    }
+    
+    public final void llenarCbxPaciente() {
+        cnx.Conecta();
+        try {            
+            modeloCombo = new DefaultComboBoxModel<String>();            
+            String SQL = "select concat(nombre,' ',apellido) as paciente from paciente";
+            stm = cnx.conn.createStatement();            
+            rs = stm.executeQuery(SQL);
+            while (rs.next()) {
+                modeloCombo.addElement(rs.getString("paciente"));
+            }
+            rs.close();
+            cbxPaciente.setModel(modeloCombo);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al Llenar el CB de Paciente: " + ex.getMessage());
+        } finally {
+            cnx.Desconecta();
+        }
+    }
+    
+    private boolean validar(){
+        boolean val=false;
+        if(txtObservacion.getText().trim().length()==0){ //Valida campo Nombre
+            JOptionPane.showMessageDialog(this, "Las observaciones no pueden estar vacías");
+            val = false;
+        } else {
+            val=true;
+        }       
+        return val;
     }
 
     /**
@@ -128,16 +188,16 @@ public class HistorialClinicoIF extends javax.swing.JInternalFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        cbxPaciente = new javax.swing.JComboBox<>();
+        cbxPaciente = new javax.swing.JComboBox<String>();
         jLabel2 = new javax.swing.JLabel();
         cbxMedico = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
-        fecha = new com.toedter.calendar.JDateChooser();
+        dfecha = new com.toedter.calendar.JDateChooser();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtObservacion = new javax.swing.JTextArea();
         tblHostorial = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblHistorial = new javax.swing.JTable();
         btnNuevo = new javax.swing.JButton();
         btnActualizar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
@@ -152,15 +212,15 @@ public class HistorialClinicoIF extends javax.swing.JInternalFrame {
 
         jLabel1.setText("Paciente");
 
-        cbxPaciente.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxPaciente.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel2.setText("Médico");
 
-        cbxMedico.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxMedico.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel3.setText("Fecha");
 
-        fecha.setDateFormatString("dd-MM-yyyy");
+        dfecha.setDateFormatString("dd-MM-yyyy");
 
         jLabel4.setText("Observaciones");
 
@@ -185,7 +245,7 @@ public class HistorialClinicoIF extends javax.swing.JInternalFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(cbxPaciente, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cbxMedico, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(fecha, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE))
+                            .addComponent(dfecha, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jScrollPane1))
                 .addContainerGap())
@@ -204,7 +264,7 @@ public class HistorialClinicoIF extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
-                    .addComponent(fecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(dfecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
@@ -212,7 +272,7 @@ public class HistorialClinicoIF extends javax.swing.JInternalFrame {
                 .addContainerGap(19, Short.MAX_VALUE))
         );
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblHistorial.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
                 {null, null, null},
@@ -223,15 +283,41 @@ public class HistorialClinicoIF extends javax.swing.JInternalFrame {
                 "Title 1", "Title 2", "Title 3"
             }
         ));
-        tblHostorial.setViewportView(jTable1);
+        tblHistorial.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblHistorialMouseClicked(evt);
+            }
+        });
+        tblHostorial.setViewportView(tblHistorial);
+        tblHistorial.getAccessibleContext().setAccessibleParent(tblHistorial);
 
         btnNuevo.setText("Nuevo");
+        btnNuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoActionPerformed(evt);
+            }
+        });
 
         btnActualizar.setText("Actualizar");
+        btnActualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnActualizarActionPerformed(evt);
+            }
+        });
 
         btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
 
         btnGuardar.setText("Guardar");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
 
         btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -305,6 +391,100 @@ public class HistorialClinicoIF extends javax.swing.JInternalFrame {
         BotonesInicio();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
+    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
+        Habilitar();
+        limpiar();
+        llenarCbxPaciente();
+        llenarCbxMedico();
+        BotonesNuevo();
+    }//GEN-LAST:event_btnNuevoActionPerformed
+
+    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
+        if (validar()==true){            
+        int i = JOptionPane.showConfirmDialog(null, "Desea Actualizar?","Confirmar",
+            JOptionPane.OK_CANCEL_OPTION,JOptionPane.ERROR_MESSAGE);
+            if(i==JOptionPane.OK_OPTION){
+                int fila = tblHistorial.getSelectedRow();
+                hc.setIdpaciente(pa.consultaIdPaciente(this.cbxPaciente.getSelectedItem().toString().trim()));
+                hc.setIdmedico(me.consultaIdMedico(this.cbxMedico.getSelectedItem().toString().trim()));
+                hc.setFecha((String) sdf.format(dfecha.getDate()).trim());
+                hc.setObservacion(this.txtObservacion.getText().trim());
+                hc.setIdhistorial_clinico(Integer.parseInt(this.tblHistorial.getValueAt(fila, 0).toString()));
+                hc.actualizarHistorialClinico();
+            }
+            LlenarTabla();
+            limpiar();
+            Deshabilitar();
+            BotonesInicio();
+        }
+    }//GEN-LAST:event_btnActualizarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        int i = JOptionPane.showConfirmDialog(null, "Desea Eliminar?","Confirmar",
+            JOptionPane.OK_CANCEL_OPTION,JOptionPane.ERROR_MESSAGE);
+        if(i==JOptionPane.OK_OPTION){
+            int fila = tblHistorial.getSelectedRow();
+            hc.setIdhistorial_clinico(Integer.parseInt(tblHistorial.getValueAt(fila, 0).toString()));
+            hc.eliminarHistorialClinico();
+        limpiar();
+        Deshabilitar();
+        LlenarTabla();
+        BotonesInicio();
+        }
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        if (validar()==true){        
+        int i = JOptionPane.showConfirmDialog(null, "Desea Guardar?","Confirmar",
+            JOptionPane.OK_CANCEL_OPTION,JOptionPane.ERROR_MESSAGE);
+        if(i==JOptionPane.OK_OPTION){
+            hc.setIdpaciente(pa.consultaIdPaciente(this.cbxPaciente.getSelectedItem().toString().trim()));
+            hc.setIdmedico(me.consultaIdMedico(this.cbxMedico.getSelectedItem().toString().trim()));
+            hc.setFecha((String) sdf.format(dfecha.getDate()).trim());
+            hc.setObservacion(txtObservacion.getText().trim());
+            hc.guardarHistorialClinico();
+        }
+        LlenarTabla();
+        limpiar();
+        Deshabilitar();
+        BotonesInicio();
+        }
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void tblHistorialMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblHistorialMouseClicked
+        if (evt.getButton()==1){
+            int fila = tblHistorial.getSelectedRow();
+            Habilitar();
+            llenarCbxPaciente();
+            llenarCbxMedico();
+            BotonesClick();
+            cnx.Conecta();
+            SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
+            try{                                               
+                String SQL = "Select * from historial_clinico where idhistorial_clinico = " + tblHistorial.getValueAt(fila, 0);
+                stm = cnx.conn.createStatement();
+                rs = stm.executeQuery(SQL);
+                
+                rs.next();
+                cbxPaciente.setSelectedItem(pa.consultaPaciente(rs.getInt("idpaciente")));
+                cbxMedico.setSelectedItem(me.consultaMedico(rs.getInt("idmedico")));
+                try {
+                    dfecha.setDate(formatoFecha.parse(rs.getString("fecha")));
+                } catch (ParseException ex) {
+                    Logger.getLogger(HistorialClinicoIF.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                txtObservacion.setText(rs.getString("observacion"));
+            } catch(SQLException | HeadlessException e){
+                JOptionPane.showMessageDialog(null, "Error al marcar en el Historial Clínico: " + e.getMessage());
+            } finally {
+                cnx.Desconecta();
+            }
+        }
+    }//GEN-LAST:event_tblHistorialMouseClicked
+
+    private void tblMedicoMouseClicked(java.awt.event.MouseEvent evt) {                                       
+        
+    }
     /**
      * @param args the command line arguments
      */
@@ -344,16 +524,17 @@ public class HistorialClinicoIF extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnNuevo;
     private javax.swing.JButton btnSalir;
     private javax.swing.JComboBox<String> cbxMedico;
-    private javax.swing.JComboBox<String> cbxPaciente;
-    private com.toedter.calendar.JDateChooser fecha;
+    private javax.swing.JComboBox cbxPaciente;
+    private com.toedter.calendar.JDateChooser dfecha;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tblHistorial;
     private javax.swing.JScrollPane tblHostorial;
     private javax.swing.JTextArea txtObservacion;
     // End of variables declaration//GEN-END:variables
+
 }

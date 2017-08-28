@@ -131,43 +131,43 @@ public class Medico {
         }
     }
 
-//    public int consultaId(String Facult){
-//        int id = 0;
-//        cnx.Conecta();
-//        try{
-//            String SQL = "Select idfacultad from facultad where nombreF = "+"\""+Facult+"\"";
-//            
-//            ps = cnx.conn.prepareStatement(SQL);
-//            rs = ps.executeQuery();            
-//            while(rs.next()){
-//                id = rs.getInt("idfacultad");
-//            }
-//            
-//            ps.close();
-//        } catch(SQLException | HeadlessException e){
-//            JOptionPane.showMessageDialog(null, "Error consulta ID Facultad: " + e.getMessage());
-//        }
-//        cnx.Desconecta();       
-//        return id;
-//    }
+    public int consultaIdMedico(String nombre_completo){
+        int id = 0;
+        cnx.Conecta();
+        try{
+            String SQL = "Select idmedico from medico where nombre_completo = " + "\"" + nombre_completo + "\"";
+            
+            ps = cnx.conn.prepareStatement(SQL);
+            rs = ps.executeQuery();            
+            while(rs.next()){
+                id = rs.getInt("idmedico");
+            }
+            
+            ps.close();
+        } catch(SQLException | HeadlessException e){
+            JOptionPane.showMessageDialog(null, "Error al consultar el ID de Médico: " + e.getMessage());
+        }
+        cnx.Desconecta();       
+        return id;
+    }
     
-//    public String consultaFacultad(int id){
-//        String fila= "";
-//        cnx.Conecta();
-//        try{
-//            String SQL = "Select nombreF from facultad where idfacultad="+id;
-//            ps = cnx.conn.prepareStatement(SQL);
-//            rs = ps.executeQuery();
-//            while(rs.next()){
-//                fila = rs.getString("nombreF");
-//            }            
-//            ps.close();
-//        } catch(SQLException | HeadlessException e){
-//            JOptionPane.showMessageDialog(null, "Error consulta Nombre Facultad: " + e.getMessage());
-//        }
-//        cnx.Desconecta();       
-//        return fila;
-//    }
+    public String consultaMedico(int idmedico){
+        String fila= "";
+        cnx.Conecta();
+        try{
+            String SQL = "Select nombre_completo from medico where idmedico= " + "\"" + idmedico + "\"";
+            ps = cnx.conn.prepareStatement(SQL);
+            rs = ps.executeQuery();
+            while(rs.next()){
+                fila = rs.getString("nombre_completo");
+            }            
+            ps.close();
+        } catch(SQLException | HeadlessException e){
+            JOptionPane.showMessageDialog(null, "Error al consultar el nombre del Médico: " + e.getMessage());
+        }
+        cnx.Desconecta();       
+        return fila;
+    }
     
 //    public ArrayList<String> consultaFacultad(){
 //        cnx.Conecta();

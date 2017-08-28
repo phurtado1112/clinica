@@ -19,7 +19,7 @@ import util.Conecta;
  */
 public class HistorialClinico {
     private int idhistorial_clinico;
-    private Date fecha;
+    private String fecha;
     private String observacion;
     Paciente pa = new Paciente();
     private int idpaciente = pa.getIdpaciente();
@@ -33,7 +33,7 @@ public class HistorialClinico {
         
     }
 
-    public HistorialClinico(int idhistorial_clinico, Date fecha, String observacion, int idpaciente, int idmedico) {
+    public HistorialClinico(int idhistorial_clinico, String fecha, String observacion, int idpaciente, int idmedico) {
         this.idhistorial_clinico = idhistorial_clinico;
         this.fecha = fecha;
         this.observacion = observacion;
@@ -49,11 +49,11 @@ public class HistorialClinico {
         this.idhistorial_clinico = idhistorial_clinico;
     }
 
-    public Date getFecha() {
+    public String getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(String fecha) {
         this.fecha = fecha;
     }
 
@@ -90,7 +90,7 @@ public class HistorialClinico {
                 ps = cnx.conn.prepareStatement(SQL);
                 ps.setInt(1, idpaciente);
                 ps.setInt(2, idmedico);
-                ps.setDate(3, fecha);
+                ps.setString(3, fecha);
                 ps.setString(4, observacion);                   
                 int n = ps.executeUpdate();
                 if (n>0){
@@ -114,7 +114,7 @@ public class HistorialClinico {
                 ps = cnx.conn.prepareStatement(SQL);
                 ps.setInt(1, idpaciente);
                 ps.setInt(2, idmedico);
-                ps.setDate(3, fecha);
+                ps.setString(3, fecha);
                 ps.setString(4, observacion);
                 ps.setInt(5, idhistorial_clinico);
                 int n = ps.executeUpdate();

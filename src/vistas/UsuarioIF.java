@@ -164,7 +164,7 @@ public class UsuarioIF extends javax.swing.JInternalFrame {
         btnCancelar = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
 
-        setTitle("Catálogo de Usuario");
+        setTitle("Usuarios");
         try {
             setSelected(true);
         } catch (java.beans.PropertyVetoException e1) {

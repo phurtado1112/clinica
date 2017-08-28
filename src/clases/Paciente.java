@@ -145,49 +145,48 @@ public class Paciente {
             }
     }
     
-//    public int consultaId(String Nombr, String Apell){
-//        int id = 0;
-//        cnx.Conecta();
-//        try{
-//            String SQL = "Select idestudiante from estudiante where nombreE = "+"\""+Nombr+"\""
-//                    + "and apellidoE="+"\""+Apell+"\"";
-//            
-//            ps = cnx.conn.prepareStatement(SQL);
-//            rs = ps.executeQuery();            
-//            while(rs.next()){
-//                id = rs.getInt("idestudiante");
-//            }
-//            
-//            ps.close();
-//        } catch(SQLException | HeadlessException e){
-//            JOptionPane.showMessageDialog(null, "Error consulta ID Estudiante: " + e.getMessage());
-//        } finally {
-//        cnx.Desconecta();       
-//        }
-//        return id;
-//    }
+    public int consultaIdPaciente(String nombre_completo){
+        int id = 0;
+        cnx.Conecta();
+        try{
+            String SQL = "Select idpaciente from paciente where nombre_completo = " 
+                    + "\"" + nombre_completo + "\"";
+            
+            ps = cnx.conn.prepareStatement(SQL);
+            rs = ps.executeQuery();            
+            while(rs.next()){
+                id = rs.getInt("idpaciente");
+            }
+            
+            ps.close();
+        } catch(SQLException | HeadlessException e){
+            JOptionPane.showMessageDialog(null, "Error consulta el ID del Paciente: " + e.getMessage());
+        } finally {
+        cnx.Desconecta();       
+        }
+        return id;
+    }
 
-//    public String[] consultaEstudiante(int id){
-//        String [] fila = new String[2];
-//        cnx.Conecta();
-//        try{
-//            String SQL = "Select nombreE, apellidoE from estudiante where idestudiante="+id;
-//            
-//            ps = cnx.conn.prepareStatement(SQL);
-//            rs = ps.executeQuery();
-//            while(rs.next()){
-//                fila[0] = rs.getString("nombreE");
-//                fila[1] = rs.getString("apellidoE");
-//            }
-//            
-//            ps.close();
-//        } catch(SQLException | HeadlessException e){
-//            JOptionPane.showMessageDialog(null, "Error consulta Nombre Estidiante: " + e.getMessage());
-//        } finally {
-//        cnx.Desconecta();
-//        }
-//        return fila;
-//    }
+    public String[] consultaPaciente(int idpaciente){
+        String [] fila = new String[1];
+        cnx.Conecta();
+        try{
+            String SQL = "Select nombre_completo from paciente where idpaciente= " + "\"" + idpaciente + "\"";
+            
+            ps = cnx.conn.prepareStatement(SQL);
+            rs = ps.executeQuery();
+            while(rs.next()){
+                fila[0] = rs.getString("nombre_completo");
+            }
+            
+            ps.close();
+        } catch(SQLException | HeadlessException e){
+            JOptionPane.showMessageDialog(null, "Error al consultar el nombre del Paciente: " + e.getMessage());
+        } finally {
+        cnx.Desconecta();
+        }
+        return fila;
+    }
 
 //    public ArrayList<String> listaEstudiante(){
 //        cnx.Conecta();
